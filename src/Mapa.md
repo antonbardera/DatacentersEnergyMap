@@ -1,34 +1,97 @@
 ---
 theme: dashboard
-title: Example report
+title: Mapa
 ---
 
-# A brief history of space exploration
+# Datacenters energy consumption map
 
-This report is a brief overview of the history and current state of rocket launches and space exploration.
-
-## Background
-
-The history of rocket launches dates back to ancient China, where gunpowder-filled tubes were used as primitive forms of propulsion.
-
-Fast-forward to the 20th century during the Cold War era, the United States and the Soviet Union embarked on a space race, a competition to innovate and explore beyond Earth.
-
-This led to the launch of the first artificial satellite, Sputnik 1, and the crewed moon landing by Apollo 11. As technology advanced, rocket launches became synonymous with space exploration and satellite deployment.
-
-## The Space Shuttle era
 
 ```js
-import {timeline} from "./components/timeline.js";
+import * as L from "npm:leaflet";
+import {heatLayer} from "leaflet.heat";
 ```
 
 ```js
-const events = FileAttachment("./data/events.json").json();
+const sheetId = "1TwbP_WPGH-jvvzMBZOx5LQnCknCJUH7sBkjQ1eYnDrA";
+const gid = "0"; // número de full, normalment 0 pel primer
+const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&gid=${gid}`;
+
+const energyData = fetch(url)
+  .then(res => res.text())
+  .then(text => {
+    // La resposta ve amb "garbage" al principi i final, cal netejar-la
+    const json = JSON.parse(text.substring(47, text.length - 2));
+    
+    // extreiem les files
+    const rows = json.table.rows;
+    const headers = json.table.cols.map(c => c ? c.label : ""); // primera fila = capçaleres
+    //console.log(headers);
+
+    // convertim la resta de files a objectes
+    const data = rows.map(r => {
+      const obj = {};
+      r.c.forEach((cell, i) => {
+        obj[headers[i]] = cell ? cell.v : null;
+      });
+      return obj;
+    });
+
+    //console.log(data); // 👉 array d'objectes amb les capçaleres com a propietats
+    return data;
+  });
 ```
+
 
 ```js
-timeline(events, {height: 300})
-```
+import "npm:leaflet.heat";
 
+const div = display(document.createElement("div"));
+div.style = "height: 80vh";
+
+const map = L.map(div)
+  .setView([51.505, -0.09], 3);
+
+/*L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+})*/
+L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
+	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+	subdomains: 'abcd',
+	maxZoom: 20
+})
+  .addTo(map);
+
+// Afegim un layer amb cercles
+energyData.forEach(p => {
+  L.circleMarker([p.lat, p.lng], {
+    radius: p.power,    // el valor controla la mida
+    color: "blue",
+    fillColor: "blue",
+    fillOpacity: 0.4
+  }).bindPopup(`Valor: ${p.value} MW`).addTo(map);
+});
+
+/*
+// Exemple de punts [lat, lng, intensitat opcional]
+const heatData = [
+  [41.3851, 2.1734, 0.5],
+  [41.38, 2.17, 0.8],
+  [41.39, 2.18, 0.2],
+  [41.387, 2.176, 1.0]
+];
+
+// Afegim el heatmap
+L.heatLayer(heatData, {
+  radius: 25,   // mida de cada punt
+  blur: 15,     // suavitzat
+  maxZoom: 17
+}).addTo(map);
+//console.log(energyData);
+//let energyLayer = heatLayer(energyData).addTo(map);*/
+```
+```js
+//heatLayer = (L, require('leaflet.heat').catch(() => L.heatLayer))
+```
 ### Sputnik 1 (1957)
 
 This was the first artificial satellite. Launched by the Soviet Union, it marked the beginning of the space age.
