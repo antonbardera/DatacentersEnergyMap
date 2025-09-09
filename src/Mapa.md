@@ -43,7 +43,7 @@ const energyData = fetch(url)
 
 
 ```js
-import "npm:leaflet.heat";
+import {heatLayer} from "npm:leaflet.heat";
 
 const div = display(document.createElement("div"));
 div.style = "height: 80vh";
@@ -71,7 +71,7 @@ energyData.forEach(p => {
   }).bindPopup(`Valor: ${p.value} MW`).addTo(map);
 });
 
-/*
+
 // Exemple de punts [lat, lng, intensitat opcional]
 const heatData = [
   [41.3851, 2.1734, 0.5],
@@ -79,9 +79,9 @@ const heatData = [
   [41.39, 2.18, 0.2],
   [41.387, 2.176, 1.0]
 ];
-
+/*console.log(heatLayer);
 // Afegim el heatmap
-L.heatLayer(heatData, {
+heatLayer(heatData, {
   radius: 25,   // mida de cada punt
   blur: 15,     // suavitzat
   maxZoom: 17

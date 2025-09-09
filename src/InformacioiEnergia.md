@@ -3,32 +3,73 @@ title: Heatmap amb Leaflet
 ---
 
 ```js
-import * as L from "npm:leaflet";
+// Load Maplibre CSS
+const maplibreCSS = document.createElement("link");
+maplibreCSS.rel = "stylesheet";
+maplibreCSS.href = "https://unpkg.com/maplibre-gl@5.7.1/dist/maplibre-gl.css";
+document.head.appendChild(maplibreCSS);
 
-const mapDiv = display(document.createElement("div"));
-mapDiv.style = "height: 80vh";
+// Load Maplibre JS
+await import("https://unpkg.com/maplibre-gl@5.7.1/dist/maplibre-gl.js");
 
-const map = L.map(mapDiv).setView([41.3851, 2.1734], 13);
+// Create map container
+const div = display(document.createElement("div"));
+div.style.height = "80vh";
 
-L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-  attribution: "&copy; OpenStreetMap contributors"
-}).addTo(map);
-
-// Array de punts amb lat, lng i un valor
-const points = [
-  { lat: 41.3851, lng: 2.1734, value: 10 },
-  { lat: 41.39,   lng: 2.18,   value: 20 },
-  { lat: 41.38,   lng: 2.17,   value: 5  }
-];
-
-// Afegim un layer amb cercles
-points.forEach(p => {
-  L.circleMarker([p.lat, p.lng], {
-    radius: p.value,    // el valor controla la mida
-    color: "blue",
-    fillColor: "blue",
-    fillOpacity: 0.4
-  }).bindPopup(`Valor: ${p.value}`).addTo(map);
+// Initialize Maplibre map
+const map = new window.maplibregl.Map({
+  container: div,
+  style: "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json", // free demo style
+  center: [2.1734, 41.3851], // [lng, lat]
+  zoom: 2
 });
 
+map.on('style.load', () => {
+    map.setProjection({
+        type: 'globe',
+    });
+});
+
+const pointsArray = [
+  [3.1734, 42.3851, 0.5],
+  [2.1734, 41.3851, 0.5],
+  [2.17, 41.38, 0.8]
+];
+
+// Example GeoJSON data
+const geojson = {
+  type: "FeatureCollection",
+  features: pointsArray.map(([lng, lat, value]) => ({
+    type: "Feature",
+    geometry: { type: "Point", coordinates: [lng, lat] },
+    properties: { value }
+  }))
+};
+
+
+
+map.on("load", () => {
+  map.addSource("points", {
+    type: "geojson",
+    data: geojson
+  });
+
+  map.addLayer({
+    id: "heatmap-layer",
+    type: "heatmap",
+    source: "points",
+    paint: {
+      // Adjust these for your needs
+      "heatmap-weight": ["get", "value"],
+      "heatmap-intensity": 1,
+      "heatmap-radius": 30,
+      "heatmap-opacity": 0.8
+    }
+  });
+});
+
+// Return the map container for display
+div
+
 ```
+
