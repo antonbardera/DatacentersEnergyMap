@@ -7,16 +7,11 @@ title: Mapa
 
 
 ```js
-import * as L from "npm:leaflet";
-import {heatLayer} from "leaflet.heat";
-```
-
-```js
 const sheetId = "1TwbP_WPGH-jvvzMBZOx5LQnCknCJUH7sBkjQ1eYnDrA";
 const gid = "0"; // número de full, normalment 0 pel primer
 const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&gid=${gid}`;
 
-const energyData = fetch(url)
+const energyData = await fetch(url)
   .then(res => res.text())
   .then(text => {
     // La resposta ve amb "garbage" al principi i final, cal netejar-la
@@ -25,7 +20,6 @@ const energyData = fetch(url)
     // extreiem les files
     const rows = json.table.rows;
     const headers = json.table.cols.map(c => c ? c.label : ""); // primera fila = capçaleres
-    //console.log(headers);
 
     // convertim la resta de files a objectes
     const data = rows.map(r => {
@@ -36,62 +30,169 @@ const energyData = fetch(url)
       return obj;
     });
 
-    //console.log(data); // 👉 array d'objectes amb les capçaleres com a propietats
-    return data;
+    const maxPower = Math.max(...data.map(d=>d.power));
+    const normdata = data.map(d => ({
+      ...d,
+      norm_power : 2.0 * d.power / maxPower
+    }))
+    return normdata;
   });
+  //console.log(energyData);
 ```
 
 
 ```js
-import {heatLayer} from "npm:leaflet.heat";
+// Load Maplibre CSS
+const maplibreCSS = document.createElement("link");
+maplibreCSS.rel = "stylesheet";
+maplibreCSS.href = "https://unpkg.com/maplibre-gl@5.7.1/dist/maplibre-gl.css";
+document.head.appendChild(maplibreCSS);
 
+// Load Maplibre JS
+await import("https://unpkg.com/maplibre-gl@5.7.1/dist/maplibre-gl.js");
+
+// Create map container
 const div = display(document.createElement("div"));
-div.style = "height: 80vh";
+div.style.height = "80vh";
 
-const map = L.map(div)
-  .setView([51.505, -0.09], 3);
+// Initialize Maplibre map
+/*const map = new window.maplibregl.Map({
+  container: div,
+  style: "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json", // free demo style
+  center: [2.1734, 41.3851], // [lng, lat]
+  zoom: 2
+});*/
 
-/*L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-})*/
-L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
-	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-	subdomains: 'abcd',
-	maxZoom: 20
-})
-  .addTo(map);
-
-// Afegim un layer amb cercles
-energyData.forEach(p => {
-  L.circleMarker([p.lat, p.lng], {
-    radius: p.power,    // el valor controla la mida
-    color: "blue",
-    fillColor: "blue",
-    fillOpacity: 0.4
-  }).bindPopup(`Valor: ${p.value} MW`).addTo(map);
+const map = new window.maplibregl.Map({
+  container: div,
+  style: {
+    version: 8,
+    sources: {
+      cartoLight: {
+        type: "raster",
+        tiles: [
+          "https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+          "https://b.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+          "https://c.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+          "https://d.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+        ],
+        tileSize: 256,
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> ' +
+          'contributors &copy; <a href="https://www.carto.com/">CARTO</a>'
+      }
+    },
+    layers: [
+      {
+        id: "carto-light",
+        type: "raster",
+        source: "cartoLight",
+        minzoom: 0,
+        maxzoom: 20
+      }
+    ]
+  },
+  center: [2.1734, 41.3851], // [lng, lat]
+  zoom: 2
 });
 
 
-// Exemple de punts [lat, lng, intensitat opcional]
-const heatData = [
-  [41.3851, 2.1734, 0.5],
-  [41.38, 2.17, 0.8],
-  [41.39, 2.18, 0.2],
-  [41.387, 2.176, 1.0]
-];
-/*console.log(heatLayer);
-// Afegim el heatmap
-heatLayer(heatData, {
-  radius: 25,   // mida de cada punt
-  blur: 15,     // suavitzat
-  maxZoom: 17
-}).addTo(map);
+/*const pointsArray = [
+  [3.1734, 42.3851, 0.5],
+  [2.1734, 41.3851, 0.5],
+  [2.17, 41.38, 0.8]
+];*/
+
 //console.log(energyData);
-//let energyLayer = heatLayer(energyData).addTo(map);*/
+
+//console.log(energyData.map((d) => ([+d.lng, +d.lat, +d.norm_power])));
+/*    layers: [
+      {
+        id: "osm-layer",
+        type: "raster",
+        source: "osm",
+        minzoom: 0,
+        maxzoom: 22
+      },
+      {
+        id: "heatmap-layer",
+        type: "heatmap",
+        source: "points",
+        maxzoom: 8, // només visible a zoom baixos
+        paint: {
+          "heatmap-weight": ["interpolate", ["linear"], ["get", "value"], 0, 0, 20, 1],
+          "heatmap-intensity": 1,
+          "heatmap-radius": 25,
+          "heatmap-opacity": 0.8
+        }
+      },
+      {
+        id: "circle-layer",
+        type: "circle",
+        source: "points",
+        minzoom: 8, // només visible a zoom alts
+        paint: {
+          "circle-radius": ["interpolate", ["linear"], ["get", "value"], 0, 4, 20, 12],
+          "circle-color": "blue",
+          "circle-opacity": 0.6,
+          "circle-stroke-color": "white",
+          "circle-stroke-width": 1
+        }
+      }
+    ]
+  },*/
+
+
+// Example GeoJSON data
+const geojson = {
+  type: "FeatureCollection",
+  features: energyData.map((d) => ([+d.lat, +d.lng, +d.norm_power])).map(([lat,lng,value]) => ({
+    type: "Feature",
+    geometry: { type: "Point", coordinates: [lng, lat] },
+    properties: { value }
+  })
+  )
+};
+
+
+
+map.on("load", () => {
+  map.addSource("points", {
+    type: "geojson",
+    data: geojson
+  });
+
+  map.addLayer({
+    id: "heatmap-layer",
+    type: "heatmap",
+    source: "points",
+    paint: {
+      // Adjust these for your needs
+      "heatmap-color": [ //Viridis colorscale
+        "interpolate",
+        ["linear"],
+        ["heatmap-density"],
+        0, "rgba(68,1,84,0)",   // transparent
+        0.1, "#482475",         // violeta-blavós
+        0.2, "#414487",         // morat fosc
+        0.4, "#2a788e",         // blau
+        0.6, "#22a884",         // verd
+        0.8, "#7ad151",         // verd
+        1.0, "#fde725"          // groc
+      ],
+      "heatmap-weight": ["get", "value"],
+      "heatmap-intensity": 1,
+      "heatmap-radius": 70,
+      "heatmap-opacity": 0.8
+    }
+  });
+});
+
+// Return the map container for display
+div
 ```
-```js
-//heatLayer = (L, require('leaflet.heat').catch(() => L.heatLayer))
-```
+
+
 ### Sputnik 1 (1957)
 
 This was the first artificial satellite. Launched by the Soviet Union, it marked the beginning of the space age.
