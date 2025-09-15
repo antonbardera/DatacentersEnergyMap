@@ -4,11 +4,10 @@ toc: false
 
 <div class="hero">
   <h1>DataCentersEnergyMap</h1>
-  <h2>Welcome to your new app! Edit&nbsp;<code style="font-size: 90%;">src/index.md</code> to change this page.</h2>
-  <a href="https://observablehq.com/framework/getting-started">Get started<span style="display: inline-block; margin-left: 0.25rem;">↗︎</span></a>
+  <h2>Dashboard del Consumo Energético de los Data centers</h2>
 </div>
 
-<div class="grid grid-cols-2" style="grid-auto-rows: 504px;">
+<!-- <div class="grid grid-cols-2" style="grid-auto-rows: 504px;">
   <div class="card">${
     resize((width) => Plot.plot({
       title: "Your awesomeness over time 🚀",
@@ -36,13 +35,29 @@ toc: false
     }))
   }</div>
 </div>
-
+ -->
 ---
 
-## Next steps
+- El rápido crecimiento de los servicios en la nube, el big data y, en particular, la inteligencia artificial (IA), está disparando la demanda eléctrica de los data centers. La Agencia Internacional de la Energía (IEA) alerta de que este consumo representa ya una fracción significativa del total mundial y podría duplicarse o triplicarse en la próxima década.
+- Aunque la Directiva Europea de Eficiencia Energética (2023) obliga a los data centers (de 500 kW como mínimo) a reportar indicadores energéticos, los datos disponibles siguen fragmentados y poco transparentes. Este trabajo recopila información de distintas fuentes internacionales (IEA, DataCenterMap, EMBER, Ericsson, Department of Energy, Comisión Europea) para estimar el consumo de los data centers y visualizar los resultados mediante un dashboard interactivo desarrollado con MapLibre, Observable Framework y Plot. 
+- Aunque el propósito último de esta comunicación es la elaboración de un dashboard del consumo energético de los data centers, enmarcamos este problema desde una perspectiva más amplia. Para ello, se introducen algunos principios de física de la información, se examinan las principales causas del consumo energético en los data centers y la importancia de estos y de las redes de transmisión de datos, así como los requerimientos específicos que plantea la inteligencia artificial en el procesamiento masivo de información. Puntualmente, también se plantea la cuestión de qué escenarios energéticos pueden esperarse en el futuro.
+
+
+Las principales fuentes de datos que hemos utilizado son 
+
+- International Energy Agency (IEA): https://www.iea.org/
+- Datacente.rs world map: https://datacente.rs/
+- DataCenterMap: https://www.datacentermap.com/
+- EMBER: https://ember-energy.org/
+- U.S. Department of Energy (DOE): https://www.energy.gov/
+- European Comission: https://energy.ec.europa.eu/
+
+
+
+<!-- ## Next steps
 
 Here are some ideas of things you could try…
-
+ -->
 <!-- <div class="grid grid-cols-4">
   <div class="card">
     Chart your own data using <a href="https://observablehq.com/framework/lib/plot"><code>Plot</code></a> and <a href="https://observablehq.com/framework/files"><code>FileAttachment</code></a>. Make it responsive using <a href="https://observablehq.com/framework/javascript#resize(render)"><code>resize</code></a>.

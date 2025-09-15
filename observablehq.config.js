@@ -7,9 +7,12 @@ export default {
   // all pages will be listed in alphabetical order. Listing pages explicitly
   // lets you organize them into sections and have unlisted pages.
    pages: [
-    {name: "Energia i Informació", path: "/InformacioiEnergia"},
-    {name: "Consum d'energia en els DataCenters", path: "/EnergiaDatacenters"},
-    {name: "Mapa", path: "/Mapa"}
+    {name: "Data centers y redes de transmisión de datos", path: "/DataCentersRedes"},
+    {name: "Información y energía", path: "/InformacioiEnergia"},
+    {name: "Consumo eléctrico de los data centers", path: "/ConsumoDatacenters"},
+    {name: "Energía e IA", path: "/EnergiaIA"},
+    {name: "Mapa", path: "/Mapa"},
+    {name: "Análisis por regiones", path: "/RegionDashboard"}
    ],
 
   // Content to add to the head of the page, e.g. for a favicon:

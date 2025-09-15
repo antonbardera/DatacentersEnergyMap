@@ -1,0 +1,37 @@
+[
+  { "type": "Accelerated servers", "year": 2020, "energy": 20 },
+  { "type": "Conventional servers", "year": 2020, "energy": 140 },
+  { "type": "Other IT equipment", "year": 2020, "energy": 40 },
+  { "type": "Cooling", "year": 2020, "energy": 30 },
+  { "type": "Other infrastructure", "year": 2020, "energy": 30 },
+
+  { "type": "Accelerated servers", "year": 2022, "energy": 40 },
+  { "type": "Conventional servers", "year": 2022, "energy": 170 },
+  { "type": "Other IT equipment", "year": 2022, "energy": 50 },
+  { "type": "Cooling", "year": 2022, "energy": 40 },
+  { "type": "Other infrastructure", "year": 2022, "energy": 35 },
+
+  { "type": "Accelerated servers", "year": 2024, "energy": 90 },
+  { "type": "Conventional servers", "year": 2024, "energy": 210 },
+  { "type": "Other IT equipment", "year": 2024, "energy": 70 },
+  { "type": "Cooling", "year": 2024, "energy": 55 },
+  { "type": "Other infrastructure", "year": 2024, "energy": 45 },
+
+  { "type": "Accelerated servers", "year": 2026, "energy": 170 },
+  { "type": "Conventional servers", "year": 2026, "energy": 240 },
+  { "type": "Other IT equipment", "year": 2026, "energy": 90 },
+  { "type": "Cooling", "year": 2026, "energy": 70 },
+  { "type": "Other infrastructure", "year": 2026, "energy": 55 },
+
+  { "type": "Accelerated servers", "year": 2028, "energy": 260 },
+  { "type": "Conventional servers", "year": 2028, "energy": 270 },
+  { "type": "Other IT equipment", "year": 2028, "energy": 120 },
+  { "type": "Cooling", "year": 2028, "energy": 90 },
+  { "type": "Other infrastructure", "year": 2028, "energy": 70 },
+
+  { "type": "Accelerated servers", "year": 2030, "energy": 350 },
+  { "type": "Conventional servers", "year": 2030, "energy": 310 },
+  { "type": "Other IT equipment", "year": 2030, "energy": 150 },
+  { "type": "Cooling", "year": 2030, "energy": 110 },
+  { "type": "Other infrastructure", "year": 2030, "energy": 90 }
+]

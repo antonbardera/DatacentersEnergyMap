@@ -40,6 +40,18 @@ const energyData = await fetch(url)
   //console.log(energyData);
 ```
 
+```js
+import * as Inputs from "@observablehq/inputs"
+
+// Exemple: selector de categories
+const selectedRegion = view(Inputs.select(
+  ["Accelerated servers", "Conventional servers", "Other IT equipment", "Cooling", "Other infrastructure"], 
+  {
+    label: "Escull categoria:",
+    value: "Accelerated servers"
+  }
+))
+```
 
 ```js
 // Load Maplibre CSS
@@ -53,7 +65,7 @@ await import("https://unpkg.com/maplibre-gl@5.7.1/dist/maplibre-gl.js");
 
 // Create map container
 const div = display(document.createElement("div"));
-div.style.height = "80vh";
+div.style.height = "40vh";
 
 // Initialize Maplibre map
 /*const map = new window.maplibregl.Map({
@@ -96,6 +108,11 @@ const map = new window.maplibregl.Map({
   zoom: 2
 });
 
+map.on('style.load', () => {
+    map.setProjection({
+        type: 'globe',
+    });
+});
 
 /*const pointsArray = [
   [3.1734, 42.3851, 0.5],
@@ -191,5 +208,23 @@ map.on("load", () => {
 // Return the map container for display
 div
 ```
+```css
+input[type="radio"] {
+  accent-color: #4f46e5; /* lila bonic */
+  margin-right: 6px;
+}
 
+label {
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+input[type="radio"]:checked + label {
+  background: #eef2ff;
+  color: #3730a3;
+}
+```
 
