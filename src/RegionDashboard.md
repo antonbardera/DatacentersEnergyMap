@@ -91,11 +91,6 @@ const selectedRegion = view(Inputs.select(new Map([
   const cons_future = consumptionRegion.find(d=>d.region === selectedRegion && d.year === 2030);
   const cons_now = consumptionRegion.find(d=>d.region === selectedRegion && d.year === 2025);
   const increase = 100.0*(cons_future.energy_consumption - cons_now.energy_consumption)/cons_now.energy_consumption;
-  console.log(accum_power);
-  console.log(num_datacenters);
-  console.log(cons_future);
-  console.log(cons_now);
-  console.log(increase);
 ```
 
 ```js
@@ -107,7 +102,9 @@ document.head.appendChild(maplibreCSS);
 
 // Load Maplibre JS
 await import("https://unpkg.com/maplibre-gl@5.7.1/dist/maplibre-gl.js");
+```
 
+```js
 // Create map container
 const mapdiv = display(document.createElement("div"));
 mapdiv.style.height = "40vh";

@@ -1,11 +1,12 @@
 ---
+title: Mapa energético de los Data Centers
 toc: false
 ---
 
 <div class="hero">
-  <h1>DataCentersEnergyMap</h1>
-  <h2>Dashboard del Consumo Energético de los Data centers</h2>
-</div>
+  <h1>Mapa energético de los Data Centers</h1>
+<!--   <h2>Dashboard del Consumo Energético de los Data centers</h2>
+ --></div>
 
 <!-- <div class="grid grid-cols-2" style="grid-auto-rows: 504px;">
   <div class="card">${
@@ -38,12 +39,12 @@ toc: false
  -->
 ---
 
-- El rápido crecimiento de los servicios en la nube, el big data y, en particular, la inteligencia artificial (IA), está disparando la demanda eléctrica de los data centers. La Agencia Internacional de la Energía (IEA) alerta de que este consumo representa ya una fracción significativa del total mundial y podría duplicarse o triplicarse en la próxima década.
-- Aunque la Directiva Europea de Eficiencia Energética (2023) obliga a los data centers (de 500 kW como mínimo) a reportar indicadores energéticos, los datos disponibles siguen fragmentados y poco transparentes. Este trabajo recopila información de distintas fuentes internacionales (IEA, DataCenterMap, EMBER, Ericsson, Department of Energy, Comisión Europea) para estimar el consumo de los data centers y visualizar los resultados mediante un dashboard interactivo desarrollado con MapLibre, Observable Framework y Plot. 
-- Aunque el propósito último de esta comunicación es la elaboración de un dashboard del consumo energético de los data centers, enmarcamos este problema desde una perspectiva más amplia. Para ello, se introducen algunos principios de física de la información, se examinan las principales causas del consumo energético en los data centers y la importancia de estos y de las redes de transmisión de datos, así como los requerimientos específicos que plantea la inteligencia artificial en el procesamiento masivo de información. Puntualmente, también se plantea la cuestión de qué escenarios energéticos pueden esperarse en el futuro.
+- **El rápido crecimiento de los servicios en la nube, el big data y, en particular, la inteligencia artificial (IA), está disparando la demanda eléctrica de los data centers.** La Agencia Internacional de la Energía (IEA) alerta de que este consumo representa ya una fracción significativa del total mundial y **podría duplicarse o triplicarse en la próxima década**.
+- Aunque la **Directiva Europea de Eficiencia Energética** (2023) obliga a los data centers (de 500 kW como mínimo) a reportar indicadores energéticos, **los datos disponibles siguen fragmentados y poco transparentes**. Este trabajo recopila información de distintas fuentes internacionales (IEA, DataCenterMap, EMBER, Ericsson, Department of Energy, Comisión Europea) para **estimar el consumo de los data centers y visualizar los resultados mediante un dashboard interactivo desarrollado con MapLibre, Observable Framework y Plot**. 
+- Aunque el propósito último de esta comunicación es la elaboración de un dashboard del consumo energético de los data centers, enmarcamos este problema desde una perspectiva más amplia. Para ello, se introducen algunos principios de **física de la información**, se examinan las principales **causas del consumo energético en los data centers** y la importancia de estos y de las **redes de transmisión de datos**, así como los requerimientos específicos que plantea la **inteligencia artificial** en el procesamiento masivo de información. Puntualmente, también se plantea la cuestión de qué escenarios energéticos pueden esperarse en el **futuro**.
 
 
-Las principales fuentes de datos que hemos utilizado son 
+Las principales **fuentes de datos** que hemos utilizado son 
 
 - International Energy Agency (IEA): https://www.iea.org/
 - Datacente.rs world map: https://datacente.rs/

@@ -50,18 +50,14 @@ document.head.appendChild(maplibreCSS);
 
 // Load Maplibre JS
 await import("https://unpkg.com/maplibre-gl@5.7.1/dist/maplibre-gl.js");
+```
+
+
+```js
 
 // Create map container
 const div = display(document.createElement("div"));
 div.style.height = "80vh";
-
-// Initialize Maplibre map
-/*const map = new window.maplibregl.Map({
-  container: div,
-  style: "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json", // free demo style
-  center: [2.1734, 41.3851], // [lng, lat]
-  zoom: 2
-});*/
 
 const map = new window.maplibregl.Map({
   container: div,
@@ -146,10 +142,10 @@ const map = new window.maplibregl.Map({
 // Example GeoJSON data
 const geojson = {
   type: "FeatureCollection",
-  features: energyData.map((d) => ([+d.lat, +d.lng, +d.norm_power])).map(([lat,lng,value]) => ({
+  features: energyData.map((d) => ([+d.lat, +d.lng, +d.norm_power, +d.power])).map(([lat,lng,value, power]) => ({
     type: "Feature",
     geometry: { type: "Point", coordinates: [lng, lat] },
-    properties: { value }
+    properties: { value, power }
   })
   )
 };
@@ -166,6 +162,7 @@ map.on("load", () => {
     id: "heatmap-layer",
     type: "heatmap",
     source: "points",
+    maxzoom: 8, // només visible a zoom baixos
     paint: {
       // Adjust these for your needs
       "heatmap-color": [ //Viridis colorscale
@@ -186,6 +183,51 @@ map.on("load", () => {
       "heatmap-opacity": 0.8
     }
   });
+
+  map.addLayer({
+    id: "circle-layer",
+    type: "circle",
+    source: "points",
+    minzoom: 6, // només visible a zoom alts
+    paint: {
+      "circle-radius": 5,//["interpolate", ["linear"], ["get", "value"], 0, 4, 20, 12],
+      "circle-color": "#482475",
+      "circle-opacity": 0.6,
+      "circle-stroke-color": "white",
+      "circle-stroke-width": 1
+    }
+  });
+});
+
+// Crea el popup però sense mostrar-lo encara
+const popup = new window.maplibregl.Popup({
+  closeButton: false,
+  closeOnClick: false
+});
+
+// Quan el ratolí passa per sobre un cercle
+map.on("mousemove", "circle-layer", (e) => {
+  map.getCanvas().style.cursor = "pointer"; // canvia el cursor
+
+  // Agafem la primera feature
+  const feature = e.features[0];
+
+  // Contingut del tooltip (pots personalitzar-ho)
+  const html = `
+    <strong>Power:</strong> ${feature.properties.power} KW<br>
+  `;
+
+  // Mostrem el popup
+  popup
+    .setLngLat(e.lngLat)
+    .setHTML(html)
+    .addTo(map);
+});
+
+// Quan el ratolí surt del cercle
+map.on("mouseleave", "circle-layer", () => {
+  map.getCanvas().style.cursor = "";
+  popup.remove();
 });
 
 // Return the map container for display
