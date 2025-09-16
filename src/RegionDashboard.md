@@ -3,8 +3,14 @@ theme: dashboard
 title: Mapa
 ---
 
-# Datacenters energy consumption map
+# Análisis por regiones
 
+```js
+const consumptionRegion = FileAttachment("./data/consumptionRegionYear.json").json();
+```
+```js
+import {timeline} from "./components/timeline.js";
+```
 
 ```js
 const sheetId = "1TwbP_WPGH-jvvzMBZOx5LQnCknCJUH7sBkjQ1eYnDrA";
@@ -44,13 +50,52 @@ const energyData = await fetch(url)
 import * as Inputs from "@observablehq/inputs"
 
 // Exemple: selector de categories
-const selectedRegion = view(Inputs.select(
-  ["Accelerated servers", "Conventional servers", "Other IT equipment", "Cooling", "Other infrastructure"], 
+const selectedRegion = view(Inputs.select(new Map([
+    ["Europa","EUR"], 
+    ["Asia-Pacifico","ASP"], 
+    ["Norte America","NAM"],
+    ["Centro y Sud America","CSA"], 
+    ["Africa","AFR"], 
+    ["Oriente Medio","MID"]
+    ]), 
   {
-    label: "Escull categoria:",
-    value: "Accelerated servers"
+    label: "Escoje la región:",
+    value: "EUR"
   }
 ))
+```
+
+```js
+//console.log(consumptionRegion);
+  //console.log(consumptionRegion.filter(d=> d.region === selectedRegion));
+  const regionViews = {
+    EUR: { center: [10, 50], zoom: 1 },
+    ASP: { center: [100, 0], zoom: 1 },
+    NAM: { center: [-100, 40], zoom: 1 },
+    CSA: { center: [-70, 0], zoom: 1 },
+    AFR: { center: [20, 0], zoom: 1 },
+    MID: { center: [50, 40], zoom: 1 },
+  };
+  const view = regionViews[selectedRegion];
+  if (view) {
+    map.flyTo({
+      center: view.center,
+      zoom: view.zoom,
+      speed: 0.8,     // animació suau
+      curve: 1.2
+    });
+  }
+
+  const accum_power = energyData.filter(d=>d.region === selectedRegion).reduce((acc, d) => acc + d.power, 0);
+  const num_datacenters = energyData.filter(d=>d.region === selectedRegion).length;
+  const cons_future = consumptionRegion.find(d=>d.region === selectedRegion && d.year === 2030);
+  const cons_now = consumptionRegion.find(d=>d.region === selectedRegion && d.year === 2025);
+  const increase = 100.0*(cons_future.energy_consumption - cons_now.energy_consumption)/cons_now.energy_consumption;
+  console.log(accum_power);
+  console.log(num_datacenters);
+  console.log(cons_future);
+  console.log(cons_now);
+  console.log(increase);
 ```
 
 ```js
@@ -64,8 +109,8 @@ document.head.appendChild(maplibreCSS);
 await import("https://unpkg.com/maplibre-gl@5.7.1/dist/maplibre-gl.js");
 
 // Create map container
-const div = display(document.createElement("div"));
-div.style.height = "40vh";
+const mapdiv = display(document.createElement("div"));
+mapdiv.style.height = "40vh";
 
 // Initialize Maplibre map
 /*const map = new window.maplibregl.Map({
@@ -76,7 +121,7 @@ div.style.height = "40vh";
 });*/
 
 const map = new window.maplibregl.Map({
-  container: div,
+  container: mapdiv,
   style: {
     version: 8,
     sources: {
@@ -113,52 +158,6 @@ map.on('style.load', () => {
         type: 'globe',
     });
 });
-
-/*const pointsArray = [
-  [3.1734, 42.3851, 0.5],
-  [2.1734, 41.3851, 0.5],
-  [2.17, 41.38, 0.8]
-];*/
-
-//console.log(energyData);
-
-//console.log(energyData.map((d) => ([+d.lng, +d.lat, +d.norm_power])));
-/*    layers: [
-      {
-        id: "osm-layer",
-        type: "raster",
-        source: "osm",
-        minzoom: 0,
-        maxzoom: 22
-      },
-      {
-        id: "heatmap-layer",
-        type: "heatmap",
-        source: "points",
-        maxzoom: 8, // només visible a zoom baixos
-        paint: {
-          "heatmap-weight": ["interpolate", ["linear"], ["get", "value"], 0, 0, 20, 1],
-          "heatmap-intensity": 1,
-          "heatmap-radius": 25,
-          "heatmap-opacity": 0.8
-        }
-      },
-      {
-        id: "circle-layer",
-        type: "circle",
-        source: "points",
-        minzoom: 8, // només visible a zoom alts
-        paint: {
-          "circle-radius": ["interpolate", ["linear"], ["get", "value"], 0, 4, 20, 12],
-          "circle-color": "blue",
-          "circle-opacity": 0.6,
-          "circle-stroke-color": "white",
-          "circle-stroke-width": 1
-        }
-      }
-    ]
-  },*/
-
 
 // Example GeoJSON data
 const geojson = {
@@ -199,32 +198,123 @@ map.on("load", () => {
       ],
       "heatmap-weight": ["get", "value"],
       "heatmap-intensity": 1,
-      "heatmap-radius": 50,
+      "heatmap-radius": 30,
       "heatmap-opacity": 0.8
     }
   });
 });
-
-// Return the map container for display
-div
 ```
-```css
-input[type="radio"] {
-  accent-color: #4f46e5; /* lila bonic */
-  margin-right: 6px;
-}
 
-label {
-  font-weight: 500;
-  padding: 4px 8px;
-  border-radius: 6px;
+<div class="grid grid-cols-4">
+  <div class="card grid-colspan-2 grid-rowspan-2" style="margin:0px;padding:0px;overflow:hidden">
+    ${mapdiv}
+  </div>
+  
+  <div class="card">
+     ${resize((width) => timeline(consumptionRegion.filter(d=> d.region === selectedRegion),{width}))}
+     <span class="nota">Según el informe de la IEA</span>
+  </div>
+  <div class="card">
+    <div class="numbercontainer">
+      <span class="bignumber">+${increase.toFixed(0)}</span>
+      <span class="units">%</span><br/>
+      <span class="secondarytext"> consumo energético de los data centers de la región en los próximos 5 años</span>
+    </div>
+  </div>
+  <div class="card">
+    <div class="numbercontainer">
+      <span class="bignumber">${(accum_power/1000).toFixed(1)}</span>
+      <span class="units">MW</span><br/>
+      <span class="secondarytext">de potencia contratada en los data centers de nuestra base de datos</span>
+    </div>
+  </div>
+  <div class="card">
+    <div class="numbercontainer">
+      <span class="bignumber">${num_datacenters}</span>
+      <span class="units"></span>data centers<br/>
+      <span class="secondarytext">en nuestra base de datos</span>
+    </div>
+  </div>
+</div>
+
+
+<style>
+
+/* Aplica a tot el document */
+/* body {
+  font-family: 'Helvetica Neue', 'Inter', 'Segoe UI', Arial, sans-serif;
+} */
+
+/* Estil pel <select> */
+select {
+  appearance: none;            /* amaga l’estil nadiu del navegador */
+  background-color: #f9fafb;   /* gris clar modern */
+  border: 1px solid #d1d5db;   /* gris suau */
+  border-radius: 0.5rem;       /* cantonades arrodonides */
+  padding: 0.5rem 2rem 0.5rem 0.75rem; /* espaiat còmode */
+  font-size: 1rem;
+  color: #111827;              /* text gris fosc */
+  font-family: 'Helvetica Neue', 'Inter', 'Segoe UI', Arial, sans-serif;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: all 0.2s ease;
+  line-height: 1.5;
+  margin-left:5px;
 }
 
-input[type="radio"]:checked + label {
-  background: #eef2ff;
-  color: #3730a3;
+/* Icona de desplegable (personalitzada amb gradient) */
+/*select {
+  background-image: linear-gradient(45deg, transparent 50%, #6b7280 50%),
+                    linear-gradient(135deg, #6b7280 50%, transparent 50%);
+  background-position: right 0.75rem top 50%, right 0.5rem top 50%;
+  background-size: 0.6rem 0.6rem;
+  background-repeat: no-repeat;
+}*/
+
+/* Hover */
+select:hover {
+  border-color: #9ca3af;
+  background-color: #f3f4f6;
 }
-```
+
+/* Focus (quan fas clic) */
+select:focus {
+  outline: none;
+  border-color: #482475;       /* blau/violeta modern */
+  box-shadow: 0 0 0 3px #c7d2fe;
+}
+
+.card{
+  font-family: 'Helvetica Neue', 'Inter', 'Segoe UI', Arial, sans-serif;
+  font-size:12px;
+  color:"blue";
+}
+
+.nota{
+  font-family: 'Helvetica Neue', 'Inter', 'Segoe UI', Arial, sans-serif;
+  font-size:10px;
+  color:"gray";
+}
+
+.numbercontainer{
+  padding:10px;
+  padding-left: 30px
+}
+
+.bignumber{
+  font-family: 'Helvetica Neue', 'Inter', 'Segoe UI', Arial, sans-serif;
+  font-size:60px;
+  color:#482475;
+}
+
+.units{
+  font-family: 'Helvetica Neue', 'Inter', 'Segoe UI', Arial, sans-serif;
+  font-size:18px;
+  color:"gray";
+}
+.nota{
+  font-family: 'Helvetica Neue', 'Inter', 'Segoe UI', Arial, sans-serif;
+  font-size:10px;
+  color:"gray";
+}
+</style>
 

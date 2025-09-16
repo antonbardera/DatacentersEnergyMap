@@ -1,5 +1,4 @@
 ---
-theme: dashboard
 title: Energía e IA
 toc: false
 ---
