@@ -6,10 +6,10 @@ title: Información y energía
 
   *Seth Lloyd: "Todo en el universo está hecho de bits".*
 
-El universo está hecho de materia, energía e información. Muchos físicos, desde diferentes perspectivas, coinciden en que la información es un componente esencial del universo, no solo como una descripción de la realidad, sino como su fundamento más profundo. 
+**El universo está hecho de materia, energía e información**. Muchos físicos, desde diferentes perspectivas, coinciden en que la información es un componente esencial del universo, no solo como una descripción de la realidad, sino como su fundamento más profundo. 
 
 - Rolf Landauer (IBM): **"La información es física"**. 
-- La información no existe en abstracto; siempre está vinculada a un soporte físico (electrones, átomos, impulsos eléctricos, etc.). Su procesamiento está sometido a las leyes de la física y es energéticamente costoso.
+- La información no existe en abstracto; siempre está vinculada a un **soporte físico** (electrones, átomos, impulsos eléctricos, etc.). Su procesamiento está sometido a las leyes de la física y es energéticamente costoso.
 - **[Principio de Landauer](https://es.wikipedia.org/wiki/Principio_de_Landauer) (1961): Borrar un bit de información tiene un coste mínimo inevitable**. Este principio es fundamental en la física de la información y establece el límite teórico mínimo de energía para operaciones lógicas que destruyen información. 
 - **Nuestra forma de tratar la información es mucho más costosa de lo que en un principio las leyes de la física requieren:**
   - **ordenadores actuales**

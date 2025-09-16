@@ -3,7 +3,7 @@ theme: dashboard
 title: Mapa
 ---
 
-# Datacenters energy consumption map
+# Mapa energético de los Data centers
 
 
 ```js
@@ -54,7 +54,6 @@ await import("https://unpkg.com/maplibre-gl@5.7.1/dist/maplibre-gl.js");
 
 
 ```js
-
 // Create map container
 const div = display(document.createElement("div"));
 div.style.height = "80vh";

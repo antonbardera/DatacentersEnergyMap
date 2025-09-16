@@ -107,16 +107,10 @@ await import("https://unpkg.com/maplibre-gl@5.7.1/dist/maplibre-gl.js");
 ```js
 // Create map container
 const mapdiv = display(document.createElement("div"));
-mapdiv.style.height = "40vh";
+mapdiv.style.height = "45vh";
+```
 
-// Initialize Maplibre map
-/*const map = new window.maplibregl.Map({
-  container: div,
-  style: "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json", // free demo style
-  center: [2.1734, 41.3851], // [lng, lat]
-  zoom: 2
-});*/
-
+```js
 const map = new window.maplibregl.Map({
   container: mapdiv,
   style: {
