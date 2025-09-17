@@ -48,8 +48,6 @@ const energyData = await fetch(url)
 
 ```js
 import * as Inputs from "@observablehq/inputs"
-
-// Exemple: selector de categories
 const selectedRegion = view(Inputs.select(new Map([
     ["Europa","EUR"], 
     ["Asia-Pacifico","ASP"], 
@@ -66,12 +64,10 @@ const selectedRegion = view(Inputs.select(new Map([
 ```
 
 ```js
-//console.log(consumptionRegion);
-  //console.log(consumptionRegion.filter(d=> d.region === selectedRegion));
   const regionViews = {
-    EUR: { center: [10, 50], zoom: 1 },
+    EUR: { center: [10, 50], zoom: 0.6 },
     ASP: { center: [100, 0], zoom: 1 },
-    NAM: { center: [-100, 40], zoom: 1 },
+    NAM: { center: [-100, 40], zoom: 0.8 },
     CSA: { center: [-70, 0], zoom: 1 },
     AFR: { center: [20, 0], zoom: 1 },
     MID: { center: [50, 40], zoom: 1 },

@@ -7,7 +7,7 @@ title: Data centers y redes de transmisión de datos
 La función principal de los **data centers** es **procesar, almacenar y transmitir información digital de forma segura y eficiente**, con alta velocidad de procesamiento y mínima interrupción. 
 
 Una **red de transmisión de datos** es el conjunto de infraestructuras y tecnologías que permiten **enviar información digital de forma rápida y segura de un lugar a otro**. Esto incluye desde nuestra computadora o smartphone hasta los data centers y otros usuarios en la nube.
-Según la [EIA](https://www.iea.org/energy-system/buildings/data-centres-and-data-transmission-networks), algunos aspectos básicos que debemos tener en cuenta son: 
+Según la [IEA](https://www.iea.org/energy-system/buildings/data-centres-and-data-transmission-networks), algunos aspectos básicos que debemos tener en cuenta son: 
 
 - La demanda de servicios digitales está creciendo rápidamente. **Desde 2010, el número de usuarios de internet en todo el mundo se ha más que duplicado, mientras que el tráfico global de internet se ha multiplicado por 25. Se prevé que el tráfico de datos continúe creciendo rápidamente, cuadruplicándose de aquí a 2028**. Los data centers y las redes de transmisión de datos que sustentan la **digitalización** han impulsado un **mayor consumo de energía**. 
 - Sin embargo, las rápidas mejoras en la **eficiencia energética** han contribuido a moderar el crecimiento de la **demanda de energía de los data centers y de las redes de transmisión de datos**, que representan cada uno **entre el 1 % y el 1,5 % del consumo eléctrico mundial**.
